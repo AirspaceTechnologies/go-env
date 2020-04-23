@@ -2,7 +2,7 @@
 
 A simple package to fetch environmental variables
 
-*Usage*
+**Usage**
 
 Example:
 ```
