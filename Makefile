@@ -20,7 +20,7 @@ clean_test:
 
 .PHONY: test
 test: lint
-	$(GOTEST) ./... -race
+	$(GOTEST) ./... -race -cover
 
 .PHONY: lint
 lint:
