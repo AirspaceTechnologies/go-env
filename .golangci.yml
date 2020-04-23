@@ -4,15 +4,6 @@
 linters-settings:
   govet:
     check-shadowing: true
-    settings:
-      printf:
-        funcs: # enforces the usages of go-tools/log to comply with the printf family
-          - Debugf
-          - Printf
-          - Infof
-          - Errorf
-          - Criticalf
-          - Fatalf
   golint:
     min-confidence: 0
   gocyclo:
@@ -26,10 +17,6 @@ linters-settings:
     min-occurrences: 2
   depguard:
     list-type: blacklist
-    packages:
-      - log
-    packages-with-error-messages:
-      log: "logging is allowed only by github.com/airspacetechnologies/go-tools/log"
     include-go-root: true
   misspell:
     locale: US
@@ -122,4 +109,4 @@ issues:
 # golangci.com configuration
 # https://github.com/golangci/golangci/wiki/Configuration
 service:
-  golangci-lint-version: 1.23.x # use the fixed version to not introduce new linters unexpectedly
+  golangci-lint-version: 1.25.x # use the fixed version to not introduce new linters unexpectedly
