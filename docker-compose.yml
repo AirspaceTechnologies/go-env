@@ -1,0 +1,13 @@
+version: "2.4"
+
+services:
+  test:
+    build:
+      context: ./
+      dockerfile: test.docker
+    volumes:
+      - .:/go/src/github.com/airspacetechnologies/go-tools/psql
+    working_dir: /go/src/github.com/airspacetechnologies/go-tools/psql
+    environment:
+      - GO111MODULE=on
+    command: sh -c "make test"

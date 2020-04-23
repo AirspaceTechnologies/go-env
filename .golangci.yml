@@ -1,0 +1,125 @@
+# Modified version taken from
+# https://github.com/golangci/golangci-lint/blob/master/.golangci.yml
+
+linters-settings:
+  govet:
+    check-shadowing: true
+    settings:
+      printf:
+        funcs: # enforces the usages of go-tools/log to comply with the printf family
+          - Debugf
+          - Printf
+          - Infof
+          - Errorf
+          - Criticalf
+          - Fatalf
+  golint:
+    min-confidence: 0
+  gocyclo:
+    min-complexity: 15
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  depguard:
+    list-type: blacklist
+    packages:
+      - log
+    packages-with-error-messages:
+      log: "logging is allowed only by github.com/airspacetechnologies/go-tools/log"
+    include-go-root: true
+  misspell:
+    locale: US
+  lll:
+    line-length: 140
+  goimports:
+    local-prefixes: github.com/airspacetechnologies
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - hugeParam
+      - appendCombine
+      - unnamedResult
+      - commentFormatting
+      - commentedOutCode
+      - paramTypeCombine
+      - whyNoLint
+  funlen:
+    lines: 100
+    statements: 50
+
+linters:
+  # please, do not use `enable-all`: it's deprecated and will be removed soon.
+  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
+  disable-all: true
+  enable:
+    # Defaults; explicitly enabled
+    - deadcode
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - unused
+    - varcheck
+
+    # Below should slowly be enabled
+    # ##############################
+    - bodyclose
+    - depguard
+    - dogsled
+    #- dupl
+    #- funlen
+    #- goconst
+    - gocritic
+    #- gocyclo
+    #- gofmt
+    - goimports
+    - golint
+    - gosec
+    #- interfacer
+    #- lll
+    - misspell
+    - nakedret
+    #- scopelint
+    #- stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    #- whitespace
+
+    # Don't enable:
+    # ##############################
+    # - gochecknoglobals
+    # - gocognit
+    # - godox
+    # - maligned
+    # - prealloc
+
+issues:
+  exclude:
+    - reporter.
+    - tx.End
+    - m.delivery.
+    - RecordCustomMetric
+    - RecordCustomEvent
+
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - errcheck
+
+# golangci.com configuration
+# https://github.com/golangci/golangci/wiki/Configuration
+service:
+  golangci-lint-version: 1.23.x # use the fixed version to not introduce new linters unexpectedly
