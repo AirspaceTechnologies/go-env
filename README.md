@@ -2,10 +2,10 @@
 
 A simple package to fetch environmental variables
 
-**Usage**
+## Usage
 
 Example:
-```
+```Go
 import "github.com/airspacetechnologies/go-tools/env"
 
 var (
@@ -42,6 +42,6 @@ func init() {
 }
 ```
 
-**Running Tests**
+## Running Tests
 
 Just run `docker-compose up` to run tests
