@@ -4,7 +4,7 @@ A simple package to fetch environmental variables
 
 ## Usage
 
-Example:
+Full Example:
 ```Go
 package main
 
@@ -51,4 +51,11 @@ func init() {
 
 ## Running Tests
 
+### Using docker:
+
 Just run `docker-compose up` to run tests
+
+### Without docker:
+
+If you have `golangci-lint` installed you can use `make test`. 
+Otherwise, run `go test ./... -race -cover`
