@@ -6,7 +6,10 @@ A simple package to fetch environmental variables
 
 Example:
 ```Go
-import "github.com/airspacetechnologies/go-tools/env"
+import (
+    "github.com/airspacetechnologies/go-tools/env"
+    "log"
+)
 
 var (
     boolValue     bool
