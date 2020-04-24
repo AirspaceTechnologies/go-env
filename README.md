@@ -6,9 +6,13 @@ A simple package to fetch environmental variables
 
 Example:
 ```Go
+package main
+
 import (
-    "github.com/airspacetechnologies/go-tools/env"
+    "github.com/airspacetechnologies/go-env"
+
     "log"
+    "time"
 )
 
 var (
