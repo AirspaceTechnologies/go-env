@@ -1,8 +1,4 @@
-package fetchers
-
-import (
-	"os"
-)
+package parsers
 
 type String struct {
 	Pointer *string
@@ -16,17 +12,13 @@ func NewString(ptr *string, def string) String {
 	}
 }
 
-func (s String) Fetch(key string) error {
-	var err error
+func (s String) Parse(str string) error {
+	*s.Pointer = str
+	return nil
+}
 
-	v, ok := os.LookupEnv(key)
-	if !ok {
-		v = s.Default
-		err = ErrNotSet
-	}
-
-	*s.Pointer = v
-	return err
+func (s String) SetToDefault() {
+	*s.Pointer = s.Default
 }
 
 func (s String) Value() interface{} {

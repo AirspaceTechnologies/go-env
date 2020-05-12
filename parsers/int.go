@@ -1,4 +1,4 @@
-package fetchers
+package parsers
 
 type Int struct {
 	Pointer *int
@@ -12,13 +12,18 @@ func NewInt(ptr *int, def int) Int {
 	}
 }
 
-func (i Int) Fetch(key string) error {
+func (i Int) Parse(str string) error {
 	var i64 int64
-	err := NewInt64(&i64, int64(i.Default)).Fetch(key)
+	if err := NewInt64(&i64, int64(i.Default)).Parse(str); err != nil {
+		return err
+	}
 
 	*i.Pointer = int(i64)
+	return nil
+}
 
-	return err
+func (i Int) SetToDefault() {
+	*i.Pointer = i.Default
 }
 
 func (i Int) Value() interface{} {
