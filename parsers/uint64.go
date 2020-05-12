@@ -1,7 +1,6 @@
-package fetchers
+package parsers
 
 import (
-	"os"
 	"strconv"
 )
 
@@ -17,24 +16,18 @@ func NewUint64(ptr *uint64, def uint64) Uint64 {
 	}
 }
 
-func (i Uint64) Fetch(key string) error {
-	var err error
-
-	v := i.Default
-	str, ok := os.LookupEnv(key)
-	if ok {
-		conv, parseErr := strconv.ParseUint(str, 10, 64)
-		if parseErr == nil {
-			v = conv
-		} else {
-			err = parseErr
-		}
-	} else {
-		err = ErrNotSet
+func (i Uint64) Parse(str string) error {
+	conv, err := strconv.ParseUint(str, 10, 64)
+	if err != nil {
+		return err
 	}
 
-	*i.Pointer = v
+	*i.Pointer = conv
 	return err
+}
+
+func (i Uint64) SetToDefault() {
+	*i.Pointer = i.Default
 }
 
 func (i Uint64) Value() interface{} {

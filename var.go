@@ -1,17 +1,17 @@
 package env
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"time"
 
-	"github.com/airspacetechnologies/go-env/fetchers"
-
-	"errors"
+	"github.com/airspacetechnologies/go-env/parsers"
 )
 
 type Var struct {
 	Key           string
-	Fetcher       Fetcher
+	Parser        Parser
 	DefaultLogger LogFunc
 	SuccessLogger LogFunc
 	FailureLogger LogFunc
@@ -19,39 +19,39 @@ type Var struct {
 	Sensitive     bool // true prints **** instead of real value
 }
 
-func NewVar(k string, f Fetcher) Var {
+func NewVar(k string, p Parser) Var {
 	return Var{
-		Key:     k,
-		Fetcher: f,
+		Key:    k,
+		Parser: p,
 	}
 }
 
 func BoolVar(k string, ptr *bool, def bool) Var {
-	return NewVar(k, fetchers.NewBool(ptr, def))
+	return NewVar(k, parsers.NewBool(ptr, def))
 }
 
 func DurationVar(k string, ptr *time.Duration, def time.Duration) Var {
-	return NewVar(k, fetchers.NewDuration(ptr, def))
+	return NewVar(k, parsers.NewDuration(ptr, def))
 }
 
 func Float64Var(k string, ptr *float64, def float64) Var {
-	return NewVar(k, fetchers.NewFloat64(ptr, def))
+	return NewVar(k, parsers.NewFloat64(ptr, def))
 }
 
 func IntVar(k string, ptr *int, def int) Var {
-	return NewVar(k, fetchers.NewInt(ptr, def))
+	return NewVar(k, parsers.NewInt(ptr, def))
 }
 
 func Int64Var(k string, ptr *int64, def int64) Var {
-	return NewVar(k, fetchers.NewInt64(ptr, def))
+	return NewVar(k, parsers.NewInt64(ptr, def))
 }
 
 func Uint64Var(k string, ptr *uint64, def uint64) Var {
-	return NewVar(k, fetchers.NewUint64(ptr, def))
+	return NewVar(k, parsers.NewUint64(ptr, def))
 }
 
 func StringVar(k string, ptr *string, def string) Var {
-	return NewVar(k, fetchers.NewString(ptr, def))
+	return NewVar(k, parsers.NewString(ptr, def))
 }
 
 func (v Var) WithKey(k string) Var {
@@ -59,8 +59,8 @@ func (v Var) WithKey(k string) Var {
 	return v
 }
 
-func (v Var) WithFetcher(f Fetcher) Var {
-	v.Fetcher = f
+func (v Var) WithParser(p Parser) Var {
+	v.Parser = p
 	return v
 }
 
@@ -90,7 +90,19 @@ func (v Var) WithFailureLogger(f LogFunc) Var {
 }
 
 func (v Var) Fetch() {
-	err := v.Fetcher.Fetch(v.Key)
+	var err error
+
+	str, ok := os.LookupEnv(v.Key)
+	if ok {
+		err = v.Parser.Parse(str)
+	} else {
+		err = ErrNotSet
+	}
+
+	if err != nil {
+		v.Parser.SetToDefault()
+	}
+
 	v.log(err)
 }
 
@@ -106,12 +118,12 @@ func (v Var) log(err error) {
 	if v.Sensitive {
 		args = append(args, "****, value is filtered")
 	} else {
-		args = append(args, v.Fetcher.Value())
+		args = append(args, v.Parser.Value())
 	}
 
 	if err != nil {
 		addition := "err: %v"
-		if errors.Is(err, fetchers.ErrNotSet) {
+		if errors.Is(err, ErrNotSet) {
 			addition = "default was used - %v"
 		}
 
@@ -143,5 +155,5 @@ func (v Var) success(err error) bool {
 		return true
 	}
 
-	return errors.Is(err, fetchers.ErrNotSet) && !v.SetRequired
+	return errors.Is(err, ErrNotSet) && !v.SetRequired
 }

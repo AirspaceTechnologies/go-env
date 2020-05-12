@@ -1,7 +1,6 @@
-package fetchers
+package parsers
 
 import (
-	"os"
 	"time"
 )
 
@@ -17,24 +16,18 @@ func NewDuration(ptr *time.Duration, def time.Duration) Duration {
 	}
 }
 
-func (d Duration) Fetch(key string) error {
-	var err error
-
-	v := d.Default
-	str, ok := os.LookupEnv(key)
-	if ok {
-		conv, parseErr := time.ParseDuration(str)
-		if parseErr == nil {
-			v = conv
-		} else {
-			err = parseErr
-		}
-	} else {
-		err = ErrNotSet
+func (d Duration) Parse(str string) error {
+	conv, err := time.ParseDuration(str)
+	if err != nil {
+		return err
 	}
 
-	*d.Pointer = v
+	*d.Pointer = conv
 	return err
+}
+
+func (d Duration) SetToDefault() {
+	*d.Pointer = d.Default
 }
 
 func (d Duration) Value() interface{} {

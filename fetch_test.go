@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/airspacetechnologies/go-env/fetchers"
+	"github.com/airspacetechnologies/go-env/parsers"
 
 	"github.com/stretchr/testify/require"
 )
@@ -106,19 +106,19 @@ func TestFetchMap(t *testing.T) {
 
 	vars := map[string]Var{
 		"BOOL_VALUE": {
-			Fetcher: fetchers.NewBool(&boolValue, true),
+			Parser: parsers.NewBool(&boolValue, true),
 		},
 		"STRING_VALUE": {
-			Fetcher: fetchers.NewString(&stringValue, "default"),
+			Parser: parsers.NewString(&stringValue, "default"),
 		},
 		"DURATION_VALUE": {
-			Fetcher: fetchers.NewDuration(&durationValue, 2*time.Hour),
+			Parser: parsers.NewDuration(&durationValue, 2*time.Hour),
 		},
 		"INT_VALUE": {
-			Fetcher: fetchers.NewInt(&intValue, 5),
+			Parser: parsers.NewInt(&intValue, 5),
 		},
 		"FLOAT_VALUE": {
-			Fetcher: fetchers.NewFloat64(&floatValue, 5.5),
+			Parser: parsers.NewFloat64(&floatValue, 5.5),
 		},
 	}
 

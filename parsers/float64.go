@@ -1,7 +1,6 @@
-package fetchers
+package parsers
 
 import (
-	"os"
 	"strconv"
 )
 
@@ -17,24 +16,18 @@ func NewFloat64(ptr *float64, def float64) Float64 {
 	}
 }
 
-func (f Float64) Fetch(key string) error {
-	var err error
-
-	v := f.Default
-	str, ok := os.LookupEnv(key)
-	if ok {
-		conv, parseErr := strconv.ParseFloat(str, 64)
-		if parseErr == nil {
-			v = conv
-		} else {
-			err = parseErr
-		}
-	} else {
-		err = ErrNotSet
+func (f Float64) Parse(str string) error {
+	conv, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		return err
 	}
 
-	*f.Pointer = v
+	*f.Pointer = conv
 	return err
+}
+
+func (f Float64) SetToDefault() {
+	*f.Pointer = f.Default
 }
 
 func (f Float64) Value() interface{} {
