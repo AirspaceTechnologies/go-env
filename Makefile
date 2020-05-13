@@ -10,7 +10,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
-GOLANGCLILINT=golangci-lint
+GOLANGCLILINT=/go/bin/golangci-lint
 
 build:
 	$(GOBUILD) ./...
@@ -20,7 +20,7 @@ clean_test:
 
 .PHONY: test
 test: lint
-	$(GOTEST) ./... -race -cover
+	$(GOTEST) -race -coverprofile=cover.out ./... && go tool cover -html=cover.out -o cover.html
 
 .PHONY: lint
 lint:

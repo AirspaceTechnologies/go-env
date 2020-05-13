@@ -1,0 +1,45 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: golang:1.14.1
+
+    working_directory: /go/src/github.com/airspacetechnologies/go-env
+
+    resource_class: small
+
+    steps:
+      - checkout
+
+      # run golangci-lint
+      - run:
+          name: Run golangci-lint
+          command: |
+            curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.25.0
+            make lint
+
+      # download test reporter as a static binary and prepare
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter before-build
+
+      # run tests and upload coverage
+      - run:
+          name: Run tests
+          command: |
+            go test -race -v -coverprofile=c.out ./...
+            ENVIRONMENT=benchmark go test -run=XXXX -bench=.
+            ./cc-test-reporter after-build --exit-code $?
+
+workflows:
+  version: 2
+  go-env:
+    jobs:
+      - test

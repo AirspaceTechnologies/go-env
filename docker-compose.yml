@@ -6,8 +6,8 @@ services:
       context: ./
       dockerfile: test.docker
     volumes:
-      - .:/go/src/github.com/airspacetechnologies/go-tools/psql
-    working_dir: /go/src/github.com/airspacetechnologies/go-tools/psql
+      - .:/go/src/github.com/airspacetechnologies/go-env
+    working_dir: /go/src/github.com/airspacetechnologies/go-env
     environment:
       - GO111MODULE=on
     command: sh -c "make test"
