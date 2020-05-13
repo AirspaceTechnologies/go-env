@@ -10,7 +10,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
-GOLANGCLILINT=golangci-lint
+GOLANGCLILINT=/go/bin/golangci-lint
 
 build:
 	$(GOBUILD) ./...
