@@ -20,7 +20,7 @@ clean_test:
 
 .PHONY: test
 test: lint
-	$(GOTEST) ./... -race -cover
+	$(GOTEST) -race -coverprofile=cover.out ./... && go tool cover -html=cover.out -o cover.html
 
 .PHONY: lint
 lint:
