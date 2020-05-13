@@ -19,7 +19,7 @@ jobs:
       - run:
           name: Run golangci-lint
           command: |
-            curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.25.0
+            curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.25.0
             make lint
 
       # download test reporter as a static binary and prepare
