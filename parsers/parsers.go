@@ -1,5 +1,5 @@
 // parsers is a package containing type specific logic used by the env package via the
-// env.Parsers interface. Parsers are responsible for converting a string to the correct
+// env.Parser interface. Parsers are responsible for converting a string to the correct
 // type, setting the value of its pointer for both the parsed value and default value,
 // and is able to return the value of its pointer as an interface or nil if the pointer
 // is nil.
