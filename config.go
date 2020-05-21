@@ -6,7 +6,7 @@ var (
 	FailureLogger LogFunc
 )
 
-// Log Func is a type alias for a logging function
+// LogFunc is a type alias for a logging function
 // such as log.Printf
 type LogFunc = func(string, ...interface{})
 
