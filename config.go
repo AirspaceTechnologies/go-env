@@ -6,12 +6,14 @@ var (
 	FailureLogger LogFunc
 )
 
+// LogFunc is a type alias for a logging function
+// such as log.Printf
 type LogFunc = func(string, ...interface{})
 
-// use ZeroLogger to make sure something does not get logged
+// ZeroLogger can be used to make sure something does not get logged.
 func ZeroLogger(string, ...interface{}) {}
 
-// Config
+// Config holds the logging functions.
 type Config struct {
 	DefaultLogger LogFunc
 	SuccessLogger LogFunc
