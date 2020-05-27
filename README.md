@@ -26,7 +26,7 @@ There are many options that can be set on an `env.Var` for logging and
 configuration via setting the fields in the struct or using a chainable method.
 For more information see the [docs](https://godoc.org/github.com/airspacetechnologies/go-env).
 
-### Full Example fetching multiple variables:
+### Full example fetching multiple variables:
 ```Go
 package main
 
@@ -71,7 +71,13 @@ func init() {
 }
 ```
 
-## Running Tests
+## Custom parsers and validations
+Creating custom parsers or adding validations are easy. See the examples
+in the [docs](https://godoc.org/github.com/airspacetechnologies/go-env)
+for more details.
+
+
+## Running tests
 Testing is very important and this package will maintain 100% coverage.
 
 ### Using docker:
