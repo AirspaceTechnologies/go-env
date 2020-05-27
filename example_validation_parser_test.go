@@ -2,7 +2,7 @@ package env_test
 
 import (
 	"errors"
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/airspacetechnologies/go-env"
@@ -44,27 +44,26 @@ func Example_validationParser() {
 	key := "Example_parserValidation"
 	defer os.Unsetenv(key)
 
+	v := env.Var{
+		Key:           key,
+		DefaultLogger: log.New(os.Stdout, "", 0).Printf, // sends logs to os.Stdout for examples
+	}
 	var i float64
 
-	// env variable not set
-	env.Var{Key: key, Parser: NewPercentParser(&i, 1)}.Fetch()
-	fmt.Println(i) // default value used (1), Parse not called
+	// env variable not set - uses default
+	v.WithParser(NewPercentParser(&i, 1)).Fetch()
 
-	// env variable set to negative (invalid) string
-	os.Setenv(key, "-1")
+	// env variable set to invalid value (> 100) - uses default
+	os.Setenv(key, "101")
 
-	i = 0
-	env.Var{Key: key, Parser: NewPercentParser(&i, 2)}.Fetch()
-	fmt.Println(i) // default value used (2), Parse failed
+	v.WithParser(NewPercentParser(&i, 2)).Fetch()
 
-	// env variable set to a valid hex string
+	// env variable set to a number between 0 and 100
 	os.Setenv(key, "10.3")
 
-	i = 0
-	env.Var{Key: key, Parser: NewPercentParser(&i, 3)}.Fetch()
-	fmt.Println(i) // parsed successfully (10.3)
+	v.WithParser(NewPercentParser(&i, 3)).Fetch()
 
-	// Output: 1
-	// 2
-	// 10.3
+	// Output: set Example_parserValidation=1, default was used - variable was not explicitly set in env
+	// set Example_parserValidation=2, default was used - error: percent is out of bounds
+	// set Example_parserValidation=10.3
 }

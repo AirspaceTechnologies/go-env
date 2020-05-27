@@ -2,7 +2,7 @@ package env_test
 
 import (
 	"encoding/hex"
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/airspacetechnologies/go-env"
@@ -59,27 +59,26 @@ func Example_parser() {
 	key := "Example_parser"
 	defer os.Unsetenv(key)
 
+	v := env.Var{
+		Key:           key,
+		DefaultLogger: log.New(os.Stdout, "", 0).Printf, // sends logs to os.Stdout for examples
+	}
 	var b []byte
 
-	// env variable not set
-	env.Var{Key: key, Parser: NewHexParser(&b, []byte{1})}.Fetch()
-	fmt.Println(b) // default value used ([1]), Parse not called
+	// env variable not set - uses default
+	v.WithParser(NewHexParser(&b, []byte{1})).Fetch()
 
-	// env variable set to invalid hex string
+	// env variable set to invalid hex string - uses default
 	os.Setenv(key, "gg")
 
-	b = nil
-	env.Var{Key: key, Parser: NewHexParser(&b, []byte{2})}.Fetch()
-	fmt.Println(b) // default value used ([2]), Parse failed
+	v.WithParser(NewHexParser(&b, []byte{2})).Fetch()
 
 	// env variable set to a valid hex string
 	os.Setenv(key, "ff")
 
-	b = nil
-	env.Var{Key: key, Parser: NewHexParser(&b, []byte{3})}.Fetch()
-	fmt.Println(b) // parsed successfully ([255])
+	v.WithParser(NewHexParser(&b, []byte{3})).Fetch()
 
-	// Output: [1]
-	// [2]
-	// [255]
+	// Output: set Example_parser=[1], default was used - variable was not explicitly set in env
+	// set Example_parser=[2], default was used - error: encoding/hex: invalid byte: U+0067 'g'
+	// set Example_parser=[255]
 }
