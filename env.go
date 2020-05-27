@@ -1,3 +1,3 @@
-// env is a simple package that fetches and parses
-// variables from the environment.
+// env is a simple package that fetches, parses,
+// and logs variables from the environment.
 package env

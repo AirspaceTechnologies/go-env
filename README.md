@@ -1,18 +1,37 @@
 # go-env
 
-A simple package to fetch environmental variables
+[![GoDoc](https://godoc.org/github.com/airspacetechnologies/go-env?status.svg)](https://godoc.org/github.com/airspacetechnologies/go-env)
+
+A simple package to fetch, parse, and log environmental variables.
 
 ## Usage
 
-Full Example:
+###Fetch a single environment variable:
+```Go
+package main
+
+import "github.com/airspacetechnologies/go-env"
+
+func main() {
+    // fetches an environment variable called SOME_KEY and parses the string
+    // into an int or sets the pointer to the default if parsing fails.
+    var i int
+    env.IntVar("SOME_KEY", &i, 10).Fetch()
+}
+```
+There are many options that can be set on an `env.Var` for logging and 
+configuration via setting the fields in the struct or using a chainable method.
+For more information see the [docs](https://godoc.org/github.com/airspacetechnologies/go-env).
+
+###Full Example fetching multiple variables:
 ```Go
 package main
 
 import (
-    "github.com/airspacetechnologies/go-env"
-
     "log"
     "time"
+    
+    "github.com/airspacetechnologies/go-env"
 )
 
 var (
@@ -31,25 +50,26 @@ func init() {
     env.FailureLogger = log.Fatalf
 
     // define vars
-    vars := []Var{
-        BoolVar("BOOL_VALUE", &boolValue, true),
+    vars := []env.Var{
+        env.BoolVar("BOOL_VALUE", &boolValue, true),
         // .MakeSensitive() will cause the value to be redacted from the logs
-        StringVar("STRING_VALUE", &stringValue, "default").MakeSensitive(),
+        env.StringVar("STRING_VALUE", &stringValue, "default").MakeSensitive(),
         // .WithFailureLogger() will override the default failure logger
-        DurationVar("DURATION_VALUE", &durationValue, 2*time.Hour).WithFailureLogger(log.Panicf),
+        env.DurationVar("DURATION_VALUE", &durationValue, 2*time.Hour).WithFailureLogger(log.Panicf),
         // .LogNotSetAsFailure() will cause the error logger to get called if the env is not set
-        IntVar("INT_VALUE", &intValue, 5).LogNotSetAsFailure(),
-        Int64Var("INT64_VALUE", &int64Value, -50),
-        Uint64Var("UINT64_VALUE", &uint64Value, 50),
-        Float64Var("FLOAT_VALUE", &floatValue, 5.5),
+        env.IntVar("INT_VALUE", &intValue, 5).LogNotSetAsFailure(),
+        env.Int64Var("INT64_VALUE", &int64Value, -50),
+        env.Uint64Var("UINT64_VALUE", &uint64Value, 50),
+        env.Float64Var("FLOAT_VALUE", &floatValue, 5.5),
     }
     
     // fetch the variables
-    Fetch(vars)
+    env.Fetch(vars)
 }
 ```
 
 ## Running Tests
+Testing is very important and this package will maintain 100% coverage.
 
 ### Using docker:
 

@@ -27,7 +27,7 @@ func FetchMapWithConfig(vars map[string]Var, cfg Config) {
 	}
 }
 
-// fetch sets the loggers on var and calls Fetch on Var.
+// fetch sets the loggers on var if not already set and calls Fetch on Var.
 func fetch(v Var, cfg Config) {
 	if v.DefaultLogger == nil {
 		v.DefaultLogger = cfg.DefaultLogger
