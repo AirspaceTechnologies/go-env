@@ -168,7 +168,7 @@ func (v Var) log(err error) {
 	}
 
 	if err != nil {
-		addition := "err: %v"
+		addition := "default was used - error: %v"
 		if errors.Is(err, ErrNotSet) {
 			addition = "default was used - %v"
 		}

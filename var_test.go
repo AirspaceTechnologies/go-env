@@ -76,7 +76,7 @@ func TestVar_Fetch(t *testing.T) {
 				Val: "test",
 			}),
 			Success:     false,
-			ExpectedMsg: fmt.Sprintf("set %v=test, err: mock error", t.Name()),
+			ExpectedMsg: fmt.Sprintf("set %v=test, default was used - error: mock error", t.Name()),
 			Before:      setEnv,
 		},
 		{
