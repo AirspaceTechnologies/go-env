@@ -9,7 +9,7 @@ A simple package to fetch, parse, and log environmental variables.
 
 ## Usage
 
-###Fetch a single environment variable:
+### Fetch a single environment variable:
 ```Go
 package main
 
@@ -26,7 +26,7 @@ There are many options that can be set on an `env.Var` for logging and
 configuration via setting the fields in the struct or using a chainable method.
 For more information see the [docs](https://godoc.org/github.com/airspacetechnologies/go-env).
 
-###Full Example fetching multiple variables:
+### Full Example fetching multiple variables:
 ```Go
 package main
 
