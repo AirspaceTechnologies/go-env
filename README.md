@@ -1,6 +1,9 @@
 # go-env
 
 [![GoDoc](https://godoc.org/github.com/airspacetechnologies/go-env?status.svg)](https://godoc.org/github.com/airspacetechnologies/go-env)
+[![CircleCI](https://circleci.com/gh/AirspaceTechnologies/go-env.svg?style=svg)](https://circleci.com/gh/AirspaceTechnologies/go-env)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5c40766e62652f91a7d1/test_coverage)](https://codeclimate.com/github/AirspaceTechnologies/go-env/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5c40766e62652f91a7d1/maintainability)](https://codeclimate.com/github/AirspaceTechnologies/go-env/maintainability)
 
 A simple package to fetch, parse, and log environmental variables.
 
