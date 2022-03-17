@@ -53,6 +53,6 @@ func TestBool_SetToDefault(t *testing.T) {
 
 func TestBool_Value(t *testing.T) {
 	v := true
-	require.Nil(t, Bool{}.Value())
-	require.Equal(t, v, Bool{Pointer: &v}.Value())
+	require.Nil(t, NewBool(nil, false).Value())
+	require.Equal(t, v, NewBool(&v, false).Value())
 }

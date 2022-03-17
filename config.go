@@ -1,8 +1,15 @@
 package env
 
 var (
+	// DefaultLogger logger is used for success if SuccessLogger
+	// is not specified or for failures when FailureLogger
+	// is not specified.
 	DefaultLogger LogFunc
+
+	// SuccessLogger is used when env var parsing was a success
 	SuccessLogger LogFunc
+
+	// FailureLogger is used when env var parsing was a failure
 	FailureLogger LogFunc
 )
 
@@ -20,6 +27,7 @@ type Config struct {
 	FailureLogger LogFunc
 }
 
+// DefaultConfig is the config used if none other was specified
 func DefaultConfig() Config {
 	return Config{
 		DefaultLogger: DefaultLogger,

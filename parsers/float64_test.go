@@ -53,6 +53,6 @@ func TestFloat64_SetToDefault(t *testing.T) {
 
 func TestFloat64_Value(t *testing.T) {
 	v := 55.5
-	require.Nil(t, Float64{}.Value())
-	require.Equal(t, v, Float64{Pointer: &v}.Value())
+	require.Nil(t, NewFloat64(nil, 0).Value())
+	require.Equal(t, v, NewFloat64(&v, 0).Value())
 }

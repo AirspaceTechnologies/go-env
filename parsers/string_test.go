@@ -39,6 +39,6 @@ func TestString_SetToDefault(t *testing.T) {
 
 func TestString_Value(t *testing.T) {
 	v := "test"
-	require.Nil(t, String{}.Value())
-	require.Equal(t, v, String{Pointer: &v}.Value())
+	require.Nil(t, NewString(nil, "").Value())
+	require.Equal(t, v, NewString(&v, "").Value())
 }

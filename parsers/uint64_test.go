@@ -53,6 +53,6 @@ func TestUint64_SetToDefault(t *testing.T) {
 
 func TestUint64_Value(t *testing.T) {
 	v := uint64(55)
-	require.Nil(t, Uint64{}.Value())
-	require.Equal(t, v, Uint64{Pointer: &v}.Value())
+	require.Nil(t, NewUint64(nil, 0).Value())
+	require.Equal(t, v, NewUint64(&v, 0).Value())
 }
