@@ -11,7 +11,7 @@ package env
 // should also set the value of its pointer to the
 // variable to the result of parsing upon success.
 // It returns an error if an error was encountered during
-// parsing.
+// parsing or validating.
 //
 // SetToDefault gets called if os.LookupEnv does not
 // return ok or Parse returned an error. This method

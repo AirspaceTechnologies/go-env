@@ -53,6 +53,6 @@ func TestInt_SetToDefault(t *testing.T) {
 
 func TestInt_Value(t *testing.T) {
 	v := 55
-	require.Nil(t, Int{}.Value())
-	require.Equal(t, v, Int{Pointer: &v}.Value())
+	require.Nil(t, NewInt(nil, 0).Value())
+	require.Equal(t, v, NewInt(&v, 0).Value())
 }

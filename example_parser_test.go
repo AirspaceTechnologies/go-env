@@ -2,66 +2,29 @@ package env_test
 
 import (
 	"encoding/hex"
-	"log"
+	"fmt"
+	"github.com/airspacetechnologies/go-env/validators"
+	"net"
+	"net/url"
 	"os"
 
 	"github.com/airspacetechnologies/go-env"
+	"github.com/airspacetechnologies/go-env/parsers"
 )
 
-// HexParser is an example of how to make a custom parser.
-type HexParser struct {
-	Pointer *[]byte
-	Default []byte
-}
-
 // NewHexParser is not required, it is just for convenience.
-func NewHexParser(ptr *[]byte, def []byte) HexParser {
-	return HexParser{
-		Pointer: ptr,
-		Default: def,
-	}
+func NewHexParser(ptr *[]byte, def []byte) env.Parser {
+	return parsers.NewGeneric(ptr, def, hex.DecodeString)
 }
 
-// Parse converts the string and sets the pointer upon success.
-// If it fails it returns an error.
-func (p HexParser) Parse(str string) error {
-	// convert string
-	conv, err := hex.DecodeString(str)
-	if err != nil {
-		// return error if conversion failed
-		return err
-	}
-
-	// set the value of the ppinter
-	*p.Pointer = conv
-	return nil
-}
-
-// SetToDefault gets called if the environmental variable was
-// not set or if Parse returned an error. It just sets the
-// value of the pointer.
-func (p HexParser) SetToDefault() {
-	*p.Pointer = p.Default
-}
-
-// Value returns the value of the pointer or nil as an
-// interface{} and is used for logging.
-func (p HexParser) Value() interface{} {
-	if p.Pointer == nil {
-		return nil
-	}
-
-	return *p.Pointer
-}
-
-// ExampleParser shows how to make a custom parser.
-func Example_parser() {
-	key := "Example_parser"
+// ExampleHexParser shows how to make a custom parser.
+func Example_hexParser() {
+	key := "Example_hexParser"
 	defer os.Unsetenv(key)
 
 	v := env.Var{
 		Key:           key,
-		DefaultLogger: log.New(os.Stdout, "", 0).Printf, // sends logs to os.Stdout for examples
+		DefaultLogger: newStdoutLogger(),
 	}
 	var b []byte
 
@@ -78,7 +41,60 @@ func Example_parser() {
 
 	v.WithParser(NewHexParser(&b, []byte{3})).Fetch()
 
-	// Output: set Example_parser=[1], default was used - variable was not explicitly set in env
-	// set Example_parser=[2], default was used - error: encoding/hex: invalid byte: U+0067 'g'
-	// set Example_parser=[255]
+	// Output: set Example_hexParser=[1], default was used - variable was not explicitly set in env
+	// set Example_hexParser=[2], default was used - error: encoding/hex: invalid byte: U+0067 'g'
+	// set Example_hexParser=[255]
+}
+
+// NewURLParser is not required, it is just for convenience.
+func NewURLParser(ptr **url.URL, def *url.URL, vfs ...validators.Func[*url.URL]) env.Parser {
+	return parsers.NewGeneric(ptr, def, url.Parse, vfs...)
+}
+
+// ExampleURLParser shows how to make a custom parser.
+func Example_urlParser() {
+	key := "Example_urlParser"
+	defer os.Unsetenv(key)
+
+	v := env.Var{
+		Key:           key,
+		DefaultLogger: newStdoutLogger(),
+	}
+	var u *url.URL
+
+	defaultURL := &url.URL{
+		Scheme:   "http",
+		Host:     net.JoinHostPort("localhost", "8080"),
+		Path:     "/test/path",
+		RawQuery: "parma=value",
+	}
+
+	// env variable not set - uses default
+	v.WithParser(NewURLParser(&u, defaultURL)).Fetch()
+
+	// env variable set to invalid url string failing custom validator - uses default
+	os.Setenv(key, "1")
+
+	v.WithParser(NewURLParser(&u, defaultURL, func(u *url.URL) error {
+		if u.Host == "" {
+			return fmt.Errorf("missing host")
+		}
+
+		return nil
+	})).Fetch()
+
+	// env variable set to invalid url string - uses default
+	os.Setenv(key, "1:://")
+
+	v.WithParser(NewURLParser(&u, defaultURL)).Fetch()
+
+	// env variable set to a valid url string
+	os.Setenv(key, "postgres://user:password@localhost:5432/db?sslmode=disable")
+
+	v.WithParser(NewURLParser(&u, defaultURL)).Fetch()
+
+	// Output: set Example_urlParser=http://localhost:8080/test/path?parma=value, default was used - variable was not explicitly set in env
+	// set Example_urlParser=http://localhost:8080/test/path?parma=value, default was used - error: missing host
+	// set Example_urlParser=http://localhost:8080/test/path?parma=value, default was used - error: parse "1:://": first path segment in URL cannot contain colon
+	// set Example_urlParser=postgres://user:password@localhost:5432/db?sslmode=disable
 }

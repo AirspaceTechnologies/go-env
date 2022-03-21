@@ -2,7 +2,6 @@ package env_test
 
 import (
 	"log"
-	"os"
 	"time"
 
 	"github.com/airspacetechnologies/go-env"
@@ -35,7 +34,7 @@ func ExampleFetchWithConfig() {
 
 	// set log function to log to stdout for examples
 	config := env.Config{
-		DefaultLogger: log.New(os.Stdout, "", 0).Printf,
+		DefaultLogger: newStdoutLogger(),
 	}
 
 	// fetch the variables

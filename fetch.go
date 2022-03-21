@@ -19,7 +19,7 @@ func FetchMap(vars map[string]Var) {
 	FetchMapWithConfig(vars, DefaultConfig())
 }
 
-// FetchWithConfig iterates over a Var map
+// FetchMapWithConfig iterates over a Var map
 // fetching each key from the environment with the config.
 func FetchMapWithConfig(vars map[string]Var, cfg Config) {
 	for k, v := range vars {

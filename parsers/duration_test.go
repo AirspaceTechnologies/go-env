@@ -54,6 +54,6 @@ func TestDuration_SetToDefault(t *testing.T) {
 
 func TestDuration_Value(t *testing.T) {
 	v := 5 * time.Second
-	require.Nil(t, Duration{}.Value())
-	require.Equal(t, v, Duration{Pointer: &v}.Value())
+	require.Nil(t, NewDuration(nil, 0).Value())
+	require.Equal(t, v, NewDuration(&v, 0).Value())
 }

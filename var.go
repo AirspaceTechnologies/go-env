@@ -3,10 +3,9 @@ package env
 import (
 	"errors"
 	"fmt"
+	"github.com/airspacetechnologies/go-env/parsers"
 	"os"
 	"time"
-
-	"github.com/airspacetechnologies/go-env/parsers"
 )
 
 // Var is the struct that coordinates the fetching,
@@ -78,11 +77,17 @@ func (v Var) WithParser(p Parser) Var {
 	return v
 }
 
+// WithSensitive is a chainable method that returns a copy of the Var
+// with Sensitive set to the value passed in.
+func (v Var) WithSensitive(b bool) Var {
+	v.Sensitive = b
+	return v
+}
+
 // MakeSensitive is a chainable method that returns a copy of the Var
 // with Sensitive set to true.
 func (v Var) MakeSensitive() Var {
-	v.Sensitive = true
-	return v
+	return v.WithSensitive(true)
 }
 
 // LogNotSetAsFailure is a chainable method that returns a copy of the Var
